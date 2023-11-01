@@ -3,5 +3,38 @@ author: Grace Melchers
 course: STAT 545B 2023
 output: github_document
 
+# Exercise 1: Making a function
 
+```{r}
+
+# Step 1: Load the necessary packages
+
+library(tidyverse)
+library(datateachr)
+vancouver_trees
+
+count_obs_by_variable <- function(df, grouped_var, summarized_var, na.rm = TRUE) {
+  df |>
+    group_by({{grouped_var}}) |>
+    summarize(n = n(), mean = mean({{summarized_var}}), stdev = sd({{summarized_var}}), range = (max({{summarized_var}}) - min({{summarized_var}})))
+}
+
+# Step 2: Define the function
+
+# Function name: count_obs_by_variable
+# Purpose: Calculate a count of the number of observations of a specific variable in each category of a group
+# ---INPUTS---
+# x      A character vector
+# na.rm  To remove or keep NA's before running function. Defaults to false - logical value.
+# ...    Other arguments that get passed to the group_by() and count() functions
+
+# ---OUTPUT---
+# A dataframe with a count of the number of observations of one variable grouped by the categories of another variable.
+
+
+
+nbhd_diam_summary <- count_obs_by_variable(vancouver_trees, neighbourhood_name, diameter)
+
+nbhd_diam_summary
+```
 
