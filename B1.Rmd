@@ -1,3 +1,7 @@
-# Title: Assignment B-1
-# Author: Grace Melchers
-# Course: STAT 545B 2023
+title: Assignment B-1
+author: Grace Melchers
+course: STAT 545B 2023
+output: github_document
+
+
+
