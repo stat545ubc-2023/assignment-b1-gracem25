@@ -1,23 +1,24 @@
+---
 title: Assignment B-1
 author: Grace Melchers
 course: STAT 545B 2023
 output: github_document
+---
 
+# Exercise 1 & 2: Making a function and documenting it
 
 ```{r}
+# Exercise 1: Making the function
 
-# Exercise 1: Making a function
-
-# Step 1: Load the necessary packages
+## Step 1: Load the necessary packages
 
 library(tidyverse)
 library(datateachr)
 library(testthat)
 library(roxygen2)
 
-
-# Step 2: Write the function
-# In my Mini Data Analysis, I often needed counts by neighborhood of different observations and also their values, for example the number of trees in one neighborhood or the mean, standard deviation and range of values for diameter within a certain neighborhood. I will create a function that allows me to instantly calculate all of these values within a grouped categorical variable for a numeric variable.
+## Step 2: Write the function
+## In my Mini Data Analysis, I often needed counts by neighborhood of different observations and also their values, for example the number of trees in one neighborhood or the mean, standard deviation and range of values for diameter within a certain neighborhood. I will create a function that allows me to instantly calculate all of these values within a grouped categorical variable for a numeric variable.
 
 summarize_obs_by_var_group <- function(df, grouped_var, summarized_var, na.rm = TRUE) {
   
@@ -64,7 +65,7 @@ summarize_vancouver_nbhd_diam
 
 summarize_games_developer_price <- summarize_obs_by_var_group(steam_games, developer, original_price)
 
-class(summarize_games_developer_price)
+summarize_games_developer_price
 
 # Let's show an example of when the function will throw an error - in this case, we will use the vancouver_trees dataset again to show how if we input a variable consisting of character vectors as the summarized_var, it will provide an error message and won't work. We will use neighbourhood_name as the grouped_var and std_street as the summarized_var, which is a character vector, not a numerical one.
 
