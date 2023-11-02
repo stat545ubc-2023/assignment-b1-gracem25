@@ -19,7 +19,7 @@ library(roxygen2)
 # In my Mini Data Analysis, I often needed counts by neighborhood of different observations and also their values, for example the number of trees in one neighborhood or the mean, standard deviation and range of values for diameter within a certain neighborhood. I will create a function that allows me to instantly calculate all of these values within a grouped categorical variable for a numeric variable.
 
 count_obs_by_variable <- function(df, grouped_var, summarized_var, na.rm = TRUE) {
-  stopifnot(is.numeric({{grouped_var}})
+  stopifnot(is.character({{grouped_var}}))
   df |>
     group_by({{grouped_var}}) |>
     summarize(n = n(), mean = mean({{summarized_var}}), stdev = sd({{summarized_var}}), range = (max({{summarized_var}}) - min({{summarized_var}})))
