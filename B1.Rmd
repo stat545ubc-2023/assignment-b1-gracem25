@@ -23,8 +23,12 @@ summarize_obs_by_var_group <- function(df, grouped_var, summarized_var, na.rm = 
   
   grouped_var_a <- deparse(substitute(grouped_var))
   summarized_var_a <- deparse(substitute(summarized_var))
-  stopifnot(is.character(df[[grouped_var_a]]))
-  stopifnot(is.numeric(df[[summarized_var_a]]))
+  if(!is.character(df[[grouped_var_a]])) {
+    stop('Sorry, grouped_var can only be a character vector')
+  }
+  if(!is.numeric(df[[summarized_var_a]])) {
+    stop('Sorry, summarized_var can only be a numeric vector')
+  }
   df |>
     group_by({{grouped_var}}) |>
     summarize(n = n(), mean = mean({{summarized_var}}), stdev = sd({{summarized_var}}), range = (max({{summarized_var}}) - min({{summarized_var}})))
@@ -60,7 +64,7 @@ summarize_vancouver_nbhd_diam
 
 summarize_games_developer_price <- summarize_obs_by_var_group(steam_games, developer, original_price)
 
-summarize_games_developer_price
+class(summarize_games_developer_price)
 
 # Let's show an example of when the function will throw an error - in this case, we will use the vancouver_trees dataset again to show how if we input a variable consisting of character vectors as the summarized_var, it will provide an error message and won't work. We will use neighbourhood_name as the grouped_var and std_street as the summarized_var, which is a character vector, not a numerical one.
 
@@ -75,13 +79,19 @@ summarize_vancouver_nbhd_street
 ```{r}
 
 # Let's test our function using the first example above with the output of summarize_vancouver_nbhd_diam. This should work properly, so let's use the testthat package to determine if this is the case.
-test_that(
+test_that('Function works with vancouver_trees',
   expect_equal(summarize_vancouver_nbhd_diam, (vancouver_trees |>
                                                  group_by(neighbourhood_name) |>
-                                                  summarize(n = n(), mean = mean(diameter), stdev = sd(diameter), range = (max(diameter) - min(diameter)))))
-)
-  expect_warning
+                                                  summarize(n = n(), mean = mean(diameter), stdev = sd(diameter), range = (max(diameter) - min(diameter))))))
 
+# For our second test, let's test that the function is throwing the proper error in the proper scenario - in this case, when we try to input a variable with a character vector as the summarized_var using the vancouver_trees dataset again.
+
+test_that('Function throws expected error with vancouver_trees', expect_error(summarize_obs_by_var_group(vancouver_trees, neighbourhood_name, std_street), 'Sorry, summarized_var can only be a numeric vector'))
+
+# For our third and last test, we will ensure that the output type of the function matches what we expect it to be using an example from earlier that I created from the steam_games dataset, the output summarize_games_developer_price.
+
+test_that('Function produces a dataframe',
+          expect_type(summarize_games_developer_price, "list"))
 
 ```
 
