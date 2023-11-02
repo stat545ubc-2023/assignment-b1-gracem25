@@ -3,38 +3,46 @@ author: Grace Melchers
 course: STAT 545B 2023
 output: github_document
 
-# Exercise 1: Making a function
 
 ```{r}
+
+# Exercise 1: Making a function
 
 # Step 1: Load the necessary packages
 
 library(tidyverse)
 library(datateachr)
-vancouver_trees
+library(testthat)
+library(roxygen2)
+
+# Step 2: Write the function
+# In my Mini Data Analysis, I often needed counts by neighborhood of different observations and also their values, for example the number of trees in one neighborhood or the mean, standard deviation and range of values for diameter within a certain neighborhood. I will create a function that allows me to instantly calculate all of these values within a grouped categorical variable for a numeric variable.
 
 count_obs_by_variable <- function(df, grouped_var, summarized_var, na.rm = TRUE) {
+  stopifnot(is.numeric({{grouped_var}})
   df |>
     group_by({{grouped_var}}) |>
     summarize(n = n(), mean = mean({{summarized_var}}), stdev = sd({{summarized_var}}), range = (max({{summarized_var}}) - min({{summarized_var}})))
 }
 
-# Step 2: Define the function
+# Exercise 2: Document function
 
-# Function name: count_obs_by_variable
-# Purpose: Calculate a count of the number of observations of a specific variable in each category of a group
-# ---INPUTS---
-# x      A character vector
-# na.rm  To remove or keep NA's before running function. Defaults to false - logical value.
-# ...    Other arguments that get passed to the group_by() and count() functions
+#' Function title: Count Obs By Variable Category
+#' Function description: Calculate a count of the number of observations of a specific variable in each group of a variable.
+#' @param grouped_var A character vector. I named this grouped_var because this is the variable that the function will use the group_by function with to group observations by the different categories within that variable.
+#' @param summarized_var A numeric vector, a number. I named this summarized_var because this is the variable that the function will summarize with a count of it's observations, it's mean, standard deviation and range, based on the grouped categories of the grouped_var variable.
+#' @returns A dataframe with a count of the number of observations of one variable grouped by the categories of another variable.
+#' @examples
+#' count_obs_by_variable(vancouver_trees, neighbourhood_name, diameter)
+#' count_obs_by_variable(steam_games, developer, original_price)
 
-# ---OUTPUT---
-# A dataframe with a count of the number of observations of one variable grouped by the categories of another variable.
+```
+# Exercise 3: Examples
+
+```{r}
+
+# I will demonstrate several examples of the 
 
 
-
-nbhd_diam_summary <- count_obs_by_variable(vancouver_trees, neighbourhood_name, diameter)
-
-nbhd_diam_summary
 ```
 
