@@ -15,11 +15,16 @@ library(datateachr)
 library(testthat)
 library(roxygen2)
 
+
 # Step 2: Write the function
 # In my Mini Data Analysis, I often needed counts by neighborhood of different observations and also their values, for example the number of trees in one neighborhood or the mean, standard deviation and range of values for diameter within a certain neighborhood. I will create a function that allows me to instantly calculate all of these values within a grouped categorical variable for a numeric variable.
 
-count_obs_by_variable <- function(df, grouped_var, summarized_var, na.rm = TRUE) {
-  stopifnot(is.character({{grouped_var}}))
+summarize_obs_by_var_group <- function(df, grouped_var, summarized_var, na.rm = TRUE) {
+  
+  grouped_var_a <- deparse(substitute(grouped_var))
+  summarized_var_a <- deparse(substitute(summarized_var))
+  stopifnot(is.character(df[[grouped_var_a]]))
+  stopifnot(is.numeric(df[[summarized_var_a]]))
   df |>
     group_by({{grouped_var}}) |>
     summarize(n = n(), mean = mean({{summarized_var}}), stdev = sd({{summarized_var}}), range = (max({{summarized_var}}) - min({{summarized_var}})))
@@ -27,21 +32,55 @@ count_obs_by_variable <- function(df, grouped_var, summarized_var, na.rm = TRUE)
 
 # Exercise 2: Document function
 
-#' Function title: Count Obs By Variable Category
-#' Function description: Calculate a count of the number of observations of a specific variable in each group of a variable.
+#' Summarize Observations by Another Variable's Category
+#' 
+#' Description: Calculates a summary (count of observations, mean, standard deviation, range of values) of observations of a specific variable in each group of a variable.
 #' @param grouped_var A character vector. I named this grouped_var because this is the variable that the function will use the group_by function with to group observations by the different categories within that variable.
 #' @param summarized_var A numeric vector, a number. I named this summarized_var because this is the variable that the function will summarize with a count of it's observations, it's mean, standard deviation and range, based on the grouped categories of the grouped_var variable.
 #' @returns A dataframe with a count of the number of observations of one variable grouped by the categories of another variable.
 #' @examples
-#' count_obs_by_variable(vancouver_trees, neighbourhood_name, diameter)
-#' count_obs_by_variable(steam_games, developer, original_price)
+#' summarize_obs_by_var_group(vancouver_trees, neighbourhood_name, diameter)
+#' summarize_obs_by_var_group(steam_games, developer, original_price)
 
 ```
+
 # Exercise 3: Examples
 
 ```{r}
 
-# I will demonstrate several examples of the 
+# I will demonstrate several examples of this function using a few different datasets.
+
+# First, we will get a summary of the diameter of trees found in different neighbourhoods in the City of Vancouver using the vancouver_trees dataset from datateachr. I worked with this dataset for the MDA and questions like this one are what prompted me to create this function.
+
+summarize_vancouver_nbhd_diam <- summarize_obs_by_var_group(vancouver_trees, neighbourhood_name, diameter)
+
+summarize_vancouver_nbhd_diam
+
+# Another example can be used with the steam_games dataset also from the datateachr package. Here, we will get the summary stats for original price grouped by developer.
+
+summarize_games_developer_price <- summarize_obs_by_var_group(steam_games, developer, original_price)
+
+summarize_games_developer_price
+
+# Let's show an example of when the function will throw an error - in this case, we will use the vancouver_trees dataset again to show how if we input a variable consisting of character vectors as the summarized_var, it will provide an error message and won't work. We will use neighbourhood_name as the grouped_var and std_street as the summarized_var, which is a character vector, not a numerical one.
+
+summarize_vancouver_nbhd_street <- summarize_obs_by_var_group(vancouver_trees, neighbourhood_name, std_street)
+
+summarize_vancouver_nbhd_street
+
+```
+
+# Exercise 4: Testing the function
+
+```{r}
+
+# Let's test our function using the first example above with the output of summarize_vancouver_nbhd_diam. This should work properly, so let's use the testthat package to determine if this is the case.
+test_that(
+  expect_equal(summarize_vancouver_nbhd_diam, (vancouver_trees |>
+                                                 group_by(neighbourhood_name) |>
+                                                  summarize(n = n(), mean = mean(diameter), stdev = sd(diameter), range = (max(diameter) - min(diameter)))))
+)
+  expect_warning
 
 
 ```
