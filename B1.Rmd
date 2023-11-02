@@ -39,10 +39,10 @@ summarize_obs_by_var_group <- function(df, grouped_var, summarized_var, na.rm = 
 
 #' Summarize Observations by Another Variable's Category
 #' 
-#' Description: Calculates a summary (count of observations, mean, standard deviation, range of values) of observations of a specific variable in each group of a variable.
+#' Description: This function calculates a summary (count of observations, mean, standard deviation, range of values) of the observations for a specific variable by each group in that variable.
 #' @param grouped_var A character vector. I named this grouped_var because this is the variable that the function will use the group_by function with to group observations by the different categories within that variable.
 #' @param summarized_var A numeric vector, a number. I named this summarized_var because this is the variable that the function will summarize with a count of it's observations, it's mean, standard deviation and range, based on the grouped categories of the grouped_var variable.
-#' @returns A dataframe with a count of the number of observations of one variable grouped by the categories of another variable.
+#' @return A dataframe with a count of the number of observations of one variable grouped by the categories of another variable.
 #' @examples
 #' summarize_obs_by_var_group(vancouver_trees, neighbourhood_name, diameter)
 #' summarize_obs_by_var_group(steam_games, developer, original_price)
@@ -61,7 +61,7 @@ summarize_vancouver_nbhd_diam <- summarize_obs_by_var_group(vancouver_trees, nei
 
 summarize_vancouver_nbhd_diam
 
-# Another example can be used with the steam_games dataset also from the datateachr package. Here, we will get the summary stats for original price grouped by developer.
+# Another example can be used with the steam_games dataset also from the datateachr package. Here, we will get the summary stats for original price of games grouped by developer.
 
 summarize_games_developer_price <- summarize_obs_by_var_group(steam_games, developer, original_price)
 
@@ -80,6 +80,7 @@ summarize_vancouver_nbhd_street
 ```{r}
 
 # Let's test our function using the first example above with the output of summarize_vancouver_nbhd_diam. This should work properly, so let's use the testthat package to determine if this is the case.
+
 test_that('Function works with vancouver_trees',
   expect_equal(summarize_vancouver_nbhd_diam, (vancouver_trees |>
                                                  group_by(neighbourhood_name) |>
